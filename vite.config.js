@@ -14,14 +14,10 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:9000',
+        target: 'http://localhost:5000',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, ''),
       },
     },
-    // https: {
-    //   key: fs.readFileSync('/Users/duck/Desktop/Keys/localhost-key.pem'),
-    //   cert: fs.readFileSync('/Users/duck/Desktop/Keys/localhost.pem')
-    // }
   }
 })
