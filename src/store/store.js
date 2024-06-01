@@ -1,59 +1,27 @@
-import { createStore } from 'vuex';
-import createPersistedState from 'vuex-persistedstate';
-import { jwtDecode } from "jwt-decode";
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-const store = createStore({
+Vue.use(Vuex);
+
+export default new Vuex.Store({
     state: {
-        accessToken: localStorage.getItem('accessToken') || '',
-        refreshToken: '',
-        userRole: '',
+        isAuthenticated: false,
     },
     mutations: {
-        setAccessToken(state, token) {
-            state.accessToken = token;
-            localStorage.setItem('accessToken', token);
+        setAuthentication(state, status) {
+            state.isAuthenticated = status;
         },
-        setRefreshToken(state, token) {
-            state.refreshToken = token;
-        },
-        setUserRole(state, role) {
-            state.userRole = role;
-        },
-        clearAuth(state) {
-            state.accessToken = '';
-            state.refreshToken = '';
-            state.userRole = '';
-            localStorage.removeItem('accessToken');
-        }
     },
     actions: {
-        login({ commit }, { accessToken, refreshToken }) {
-            commit('setAccessToken', accessToken);
-            commit('setRefreshToken', refreshToken);
-
-            const decodedToken = jwtDecode(accessToken);
-            const userRole = decodedToken.role;
-            commit('setUserRole', userRole);
+        login({ commit }, credentials) {
+            // 로그인 API 호출
+            // 성공 시:
+            commit('setAuthentication', true);
         },
         logout({ commit }) {
-            commit('clearAuth');
+            // 로그아웃 API 호출
+            // 성공 시:
+            commit('setAuthentication', false);
         },
-        initializeAuth({ commit }) {
-            const accessToken = localStorage.getItem('accessToken');
-            if (accessToken) {
-                commit('setAccessToken', accessToken);
-
-                const decodedToken = jwtDecode(accessToken);
-                const userRole = decodedToken.role;
-                commit('setUserRole', userRole);
-            }
-        }
     },
-    getters: {
-        isAuthenticated: state => !!state.accessToken,
-        userRole: state => state.userRole,
-    },
-    plugins: [createPersistedState()],
 });
-
-export default store;

@@ -12,22 +12,21 @@
               <tr>
                 <td class="insert-label">상품명</td>
                 <td class="insert-input">
-                  <input type="text" v-model="insertProductName" class="textInput-name" placeholder="상품명을 입력하세요."/>
+                  <input type="text" v-model="insertProductName" />
                 </td>
                 <td class="insert-label">재고량</td>
                 <td class="insert-input">
-                  <input type="number" v-model="insertProductCount" class="textInput" placeholder="재고량을 입력하세요.">
+                  <input type="number" v-model="insertProductCount">
                 </td>
                 <td class="insert-label">가격</td>
                 <td class="insert-input">
-                  <input type="number" v-model="insertProductPrice" class="textInput" placeholder="상품 가격을 입력하세요.">
+                  <input type="number" v-model="insertProductPrice">
                 </td>
               </tr>
               <tr>
                 <td class="insert-label">상품상태</td>
                 <td class="insert-input">
-                  <select v-model="insertStatus" class="textInput">
-                    <option value="">전체 상태</option>
+                  <select v-model="insertStatus">
                     <option value="공급가능">공급가능</option>
                     <option value="일시제한">일시제한</option>
                     <option value="단종">단종</option>
@@ -36,16 +35,14 @@
                 </td>
                 <td class="insert-label">상품노출상태</td>
                 <td class="insert-input">
-                  <select v-model="selectedExposureStatus" class="textInput">
-                    <option value="">전체 노출상태</option>
+                  <select v-model="selectedExposureStatus">
                     <option value="true">노출</option>
                     <option value="false">미노출</option>
                   </select>
                 </td>
                 <td class="insert-label">색상</td>
                 <td class="insert-input">
-                  <select v-model="insertColor" class="textInput">
-                    <option value="">전체 색상</option>
+                  <select v-model="insertColor">
                     <option value="빨간색">빨간색</option>
                     <option value="주황색">주황색</option>
                     <option value="노란색">노란색</option>
@@ -57,8 +54,7 @@
                 </td>
                 <td class="insert-label">사이즈</td>
                 <td class="insert-input">
-                  <select v-model="insertSize" class="textInput">
-                    <option value="">전체 사이즈</option>
+                  <select v-model="insertSize">
                     <option value="90">90</option>
                     <option value="95">95</option>
                     <option value="100">100</option>
@@ -70,23 +66,21 @@
             </table>
             <table class="second-insert-table">
               <tr>
-                <td class="second-insert-label">
-                  <div class="second-insert-label0">카테고리 구분</div>
-                </td>
+                <td class="second-insert-label">카테고리 구분</td>
                 <td class="second-insert-input">
-                  <select v-model="selectedFirstCategory" @change="fetchCategories('second')" class="categories">
+                  <select v-model="selectedFirstCategory" @change="fetchCategories('second')">
                     <option value="">대분류</option>
                     <option v-for="category in firstCategories" :key="category.categoryFirstCode" :value="category.categoryFirstCode">
                       {{ category.categoryFirstName }}
                     </option>
                   </select>
-                  <select class="categories-g" v-model="selectedSecondCategory" @change="fetchCategories('third')">
+                  <select class="categories" v-model="selectedSecondCategory" @change="fetchCategories('third')">
                     <option value="">중분류</option>
                     <option v-for="category in secondCategories" :key="category.categorySecondCode" :value="category.categorySecondCode">
                       {{ category.categorySecondName }}
                     </option>
                   </select>
-                  <select class="categories-g" v-model="selectedThirdCategory">
+                  <select class="categories" v-model="selectedThirdCategory">
                     <option value="">소분류</option>
                     <option v-for="category in thirdCategories" :key="category.categoryThirdCode" :value="category.categoryThirdCode">
                       {{ category.categoryThirdName }}
@@ -95,16 +89,16 @@
                 </td>
               </tr>
               <tr>
-                <td class="second-insert-label"><div class="second-insert-label0">상세정보</div></td>
+                <td class="second-insert-label">상세정보</td>
                 <td class="second-insert-input">
-                  <input type="text" style="width: 99%; height: 150px" v-model="insertContent" class="textInput" placeholder="상품의 상세 정보를 입력해주세요.">
+                  <input type="text" style="width: 99%; height: 150px" v-model="insertContent">
                 </td>
               </tr>
               <tr>
                 <td class="second-insert-label1">
                   <div class="label-content">
                     이미지<br>
-                    (최대 3장)
+                    <h6>(최대 3장)</h6>
                   </div>
                 </td>
                 <td class="second-insert-input1">
@@ -134,10 +128,6 @@
 <script setup>
 import { onMounted, defineEmits, ref } from 'vue';
 import imageSrc from '@/assets/icon/picture.png';
-import { useStore } from 'vuex';
-import ProductList from "@/components/amdin/product/ProductList.vue";
-const store = useStore();
-const accessToken = store.state.accessToken;
 
 const emit = defineEmits(['close']);
 const imagePreview = ref(imageSrc);
@@ -146,7 +136,7 @@ const insertProductName = ref('');
 const insertProductCount = ref('');
 const insertProductPrice = ref('');
 const insertStatus = ref('');
-const selectedExposureStatus = ref('');
+const selectedExposureStatus = ref('true');
 const insertColor = ref('');
 const insertSize = ref('');
 const insertContent = ref('');
@@ -157,29 +147,22 @@ const selectedFirstCategory = ref('');
 const selectedSecondCategory = ref('');
 const selectedThirdCategory = ref('');
 let imageUrl = '';
-
 const fetchCategories = async (level) => {
   let url = '';
   switch (level) {
     case 'first':
-      url = 'http://localhost:5000/admin/category/first';
+      url = '/api/admin/category/first';
       break;
     case 'second':
-      url = `http://localhost:5000/admin/category/second/list/detail/categoryfirst/${selectedFirstCategory.value}`;
+      url = `/api/admin/category/second/list/detail/categoryfirst/${selectedFirstCategory.value}`;
       break;
     case 'third':
-      url = `http://localhost:5000/admin/category/third/list/detail/categorysecond/${selectedSecondCategory.value}`;
+      url = `/api/admin/category/third/list/detail/categorysecond/${selectedSecondCategory.value}`;
       break;
   }
 
   try {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
+    const response = await fetch(url, { method: 'GET' });
     if (!response.ok) {
       throw new Error(`${level} 카테고리를 불러오는 데 실패했습니다.`);
     }
@@ -205,6 +188,7 @@ const resetImage = () => {
   imagePreview.value = imageSrc;
   imgOn.value = false;
 };
+
 const previewImage = (event) => {
   const file = event.target.files[0];
   if(file) {
@@ -228,14 +212,10 @@ const uploadImage = async () => {
   formData.append('file', file);
 
   try {
-    const response = await fetch(`http://localhost:5000/admin/product/image`, {
+    const response = await fetch(`/api/admin/product/image`, {
       method: 'POST',
       credentials: 'include',
-      body: formData,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
-      },
+      body: formData
     });
 
     if (!response.ok) {
@@ -250,6 +230,8 @@ const uploadImage = async () => {
     console.error('오류:', error);
   }
 };
+
+
 const saveProduct = async (imageUrl) => {
   const requestData = {
     productName: insertProductName.value,
@@ -269,11 +251,10 @@ const saveProduct = async (imageUrl) => {
   console.log('Request Data:', requestData);
 
   try {
-    const response = await fetch('http://localhost:5000/admin/product/create?requesterAdminCode=1', {
+    const response = await fetch('/api/admin/product/create?requesterAdminCode=1', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(requestData)
     });
@@ -289,9 +270,13 @@ const saveProduct = async (imageUrl) => {
     console.error('오류:', error);
   }
 };
+
+
+
 const closePopup = () => {
   emit('close');
 };
+
 onMounted(() => {
   const numberInputs = document.querySelectorAll('input[type="number"]');
   numberInputs.forEach(input => {
@@ -305,64 +290,16 @@ onMounted(() => {
       input.value = input.value.replace(/[^0-9]/g, '');
     });
   });
+
   fetchCategories('first');
 });
 
 
 const uploadAndSaveProduct = async () => {
-  if(!insertProductName.value.trim()) {
-    alert('상품명을 입력해주세요.');
-    return;
-  }
-  if(!insertProductCount.value) {
-    alert('상품의 재고량을 입력해주세요.');
-    return;
-  }
-  if(!insertProductPrice.value) {
-    alert('상품 가격을 입력해주세요.');
-    return;
-  }
-  if(!insertStatus.value.trim()) {
-    alert('상품의 상태를 정해주세요.');
-    return;
-  }
-  if(!selectedExposureStatus.value.trim()) {
-    alert('상품의 노출상태를 정해주세요.');
-    return;
-  }
-  if(!insertColor.value.trim()) {
-    alert('상품의 색상을 정해주세요.');
-    return;
-  }
-  if(!insertSize.value.trim()) {
-    alert('상품의 사이즈를 정해주세요.');
-    return;
-  }
-  if(!selectedFirstCategory.value) {
-    alert('대분류 카테고리를 정해주세요.');
-    return;
-  }
-  if(!selectedSecondCategory.value) {
-    alert('중분류 카테고리를 정해주세요.');
-    return;
-  }
-  if(!selectedThirdCategory.value) {
-    alert('소분류 카테고리를 정해주세요.');
-    return;
-  }
-  if(!insertContent.value.trim()) {
-    alert('상품의 상세정보를 입력해주세요.');
-    return;
-  }
   const fileInput = document.querySelector('input[type="file"]');
   const file = fileInput.files[0];
 
   const formData = new FormData();
-
-  if(!file) {
-    alert('상품의 사진을 첨부해주세요.');
-    return;
-  }
 
   // 이미지 파일 추가
   if (file) {
@@ -383,13 +320,10 @@ const uploadAndSaveProduct = async () => {
   formData.append('categoryThirdCode', selectedThirdCategory.value);
 
   try {
-    const response = await fetch('http://localhost:5000/admin/product/image', {
+    const response = await fetch('/api/admin/product/image', {
       method: 'POST',
       credentials: 'include',
-      body: formData,
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-      },
+      body: formData
     });
 
     if (!response.ok) {
@@ -399,51 +333,49 @@ const uploadAndSaveProduct = async () => {
 
     const data = await response.json();
     console.log('상품이 성공적으로 등록되었습니다:', data);
-    location.reload(ProductList);
     emit('close');
   } catch (error) {
     console.error('오류:', error);
   }
 };
+
+
 </script>
 
 <style scoped>
 .popup-overlay {
   position: fixed;
-  left: 50%;
-  top: 50%;
-  width: 50%;
-  margin-left: -25%;
-  height: 300px;
-  margin-top: -150px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  padding-top: 40px;
   z-index: 1000;
-  background: white;
-  border: 1px solid #d1d8dd;
-  box-shadow: 0 0 6px 1px rgb(0 0 0 / 30%);
 }
 
 .popup-content {
   background: #fff;
+  padding: 0;
   border-radius: 10px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
   position: relative;
   width: 1200px;
-  height: 1200px;
+  height: 800px;
   text-align: center;
-  overflow-y: auto; /* 내용이 많을 경우 스크롤 추가 */
 }
 
 .close-button {
   position: absolute;
-  top: 32px;
-  right: 80px;
+  top: 15px;
+  right: 15px;
   background: none;
   border: none;
-  font-size: 2em;
+  font-size: 1.5em;
   cursor: pointer;
   color: #333;
-  padding: 0; /* 추가 */
-  margin: 0; /* 추가 */
 }
 
 .popup-header {
@@ -455,13 +387,15 @@ const uploadAndSaveProduct = async () => {
   background-color: #D9D9D9;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  width: 1063px;
-  margin-left: 3.2%;
 }
 
 .popup-body {
-  padding: 10px;
-  padding-top: unset;
+  padding: 30px;
+  text-align: center;
+}
+
+.close-button:hover {
+  color: #f00;
 }
 
 h2 {
@@ -470,26 +404,38 @@ h2 {
   font-size: 1.5em;
 }
 
+
+.action-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.action-button:hover {
+  background-color: #0056b3;
+}
+
 .insert-section {
   display: flex;
   justify-content: center;
-}
-
-.table-wrapper {
-  border-radius: 0 !important;
-  height: 100%;
+  margin-bottom: 20px;
 }
 
 .insert-table {
   border-collapse: collapse;
+  background-color: #f9f9f9;
   border: 1px solid #ddd;
+  border-radius: 5px;
   padding: 10px;
+  width: 1200px;
 }
-
 .insert-table tr {
   text-align: center;
 }
-
 .insert-table td {
   padding: 5px 10px;
 }
@@ -497,7 +443,6 @@ h2 {
 .insert-label {
   font-weight: bold;
   text-align: center;
-  font-size: 12px;
   width: 10%;
   background-color: #D9D9D9;
   border: 1px solid #ddd;
@@ -509,53 +454,45 @@ h2 {
   border: 1px solid lightgray;
   border-right: none;
   height: 30px;
+
 }
-
-.insert-input input {}
-
 .second-insert-table {
   border-collapse: collapse;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 10px;
+  width: 1200px;
   border-top: none;
 }
-
 .second-insert-table tr {
   text-align: center;
 }
-
 .second-insert-table td {
   padding: 5px 10px;
   text-align: left;
 }
-
+.categories {
+  margin-left: 2%;
+}
 .second-insert-label {
   font-weight: bold;
   text-align: center;
-  font-size: 12px;
   width: 10%;
   background-color: #D9D9D9;
   border: 1px solid #ddd;
-}
+  font-size: small;
 
-.second-insert-label0 {
-  text-align: center;
-  font-size: 12px;
 }
-
 .second-insert-input {
   width: 1400px;
   border: 1px solid lightgray;
   border-right: none;
 }
 
-.label-content {
-  text-align: center;
-  font-size: 12px;
+.label-content h6 {
+  margin: 0;
 }
-
 .second-insert-label1 {
   font-weight: bold;
   text-align: center;
@@ -564,7 +501,6 @@ h2 {
   background-color: #D9D9D9;
   border: 1px solid #ddd;
 }
-
 .imgForm {
   text-align: center;
 }
@@ -576,60 +512,8 @@ h2 {
   cursor: pointer;
   color: #333;
 }
-.close-button:hover{
-  background-color: #00ff0000;
-}
+
 .img-close-button:hover {
-  background-color: #00ff0000;
-  color: #ff0000;
-}
-
-.post-button {
-  background-color: rgba(248, 155, 0, 0.8);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-}
-
-.action-button {
-  background-color: #D9D9D9;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1em;
-  margin-left: 80%;
-  margin-top: 2%;
-}
-
-.action-button:hover {
-  background-color: gray;
-}
-
-.textInput-name {
-  border: 1px solid rgba(217, 217, 217, 0.7);
-  border-radius: 5px;
-  height: 20px;
-}
-
-.textInput {
-  border: 1px solid rgba(217, 217, 217, 0.7);
-  border-radius: 5px;
-}
-
-.categories {
-  border: 1px solid rgba(217, 217, 217, 0.7);
-  border-radius: 5px;
-}
-
-.categories-g {
-  border: 1px solid rgba(217, 217, 217, 0.7);
-  border-radius: 5px;
-  margin-left: 1%;
+  color: #f00;
 }
 </style>
-

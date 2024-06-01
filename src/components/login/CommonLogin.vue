@@ -12,7 +12,7 @@
         <p class="tip">Franchise</p>
         <p class="second-text">Login</p>
       </div>
-      <div class="card yellow" @click="changeRouter('driver/login')">
+      <div class="card yellow" @click="changeRouter('delivery/login')">
         <p class="tip">Delivery</p>
         <p class="second-text">Login</p>
       </div>
@@ -36,7 +36,8 @@ const changeRouter = (route) => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 90vh;
+  height: 100vh;
+  background-color: #f5f5f5;
 }
 
 .logo {

@@ -7,7 +7,7 @@
   <article id="sidebar">
     <section class="sidebar_content">
       <div class="sidebar_title_Box">
-        <img class="sider_dashBoard" src="@/assets/icon/dashboard.png"/>
+        <img class="sider_dashBoard" src="/PIOMS_image/png/root/dashboard.png">
         <h2 class="sidebar_title">Dash Board</h2>
       </div>
     </section>
@@ -15,13 +15,11 @@
 </template>
 
 <style scoped>
-#sidebar {
-  display: flex;
-}
   .sidebar_title_Box {
-    position: sticky;
-    top: 80px;
-    left: 60px;
+    align-items: left;
+    position: relative;
+    top: 10px;
+    left: 10px;
     width: 130px;
     height: 75px;
     border: 1px solid #D9D9D9;
@@ -30,7 +28,6 @@
     color: #444444;
     padding-top: 20px;
     padding-left: 20px;
-    z-index: 100;
   }
   .sider_dashBoard {
     width: 25px;
@@ -49,8 +46,5 @@
   .sidebar_content, #sidebar {
     width: 200px;
     height: 700px;
-    position: relative;
-    bottom: 480px;
-    left: 12px;
   }
 </style>

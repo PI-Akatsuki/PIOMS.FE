@@ -1,6 +1,4 @@
 <template>
-  <div class="popup-overlay">
-    <div class="popup-content">
   <div class="container">
     <div v-if="askData" class="form-wrapper">
       <table class="detail-table">
@@ -29,99 +27,84 @@
         <label for="answer">관리자 답변</label>
         <textarea id="answer" v-model="answer" placeholder="문의에 대한 답변을 작성해주세요."></textarea>
         <div class="action-buttons">
-          <button @click="closeEdit" class="cancel-btn">취소</button>
+          <button @click="closeForm" class="cancel-btn">취소</button>
           <button @click="submitAnswer" class="submit-btn">수정</button>
         </div>
       </div>
     </div>
   </div>
-    </div>
-  </div>
 </template>
 
-<script setup>
+<script>
 import { ref, onMounted } from 'vue';
-import { defineEmits } from 'vue';
+import axios from 'axios';
+import { useRoute } from 'vue-router';
 
-const askData = ref(null);
-const answer = ref('');
-const emit = defineEmits(['refreshData']);
-const props = defineProps({
-  askCode: Object,
-  closeEdit: Function
-});
+export default {
+  name: 'AnswerFormEdit',
+  setup() {
+    const askData = ref(null);
+    const answer = ref('');
+    const route = useRoute();
 
-const fetchAskData = async () => {
-  const askCode = props.askCode.askCode;
-  if (!askCode) {
-    console.error('askCode is not defined');
-    return;
-  }
-  try {
-    const response = await fetch(`http://localhost:5000/admin/ask/${askCode}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const fetchAskData = async () => {
+      const askCode = route.query.askCode || route.params.askCode;
+      if (!askCode) {
+        console.error('askCode is not defined');
+        return;
+      }
+      try {
+        const response = await axios.get(`http://localhost:9000/admin/ask/${askCode}`);
+        askData.value = response.data;
+        answer.value = response.data.askAnswer || ''; // 이미 작성된 답변을 불러옵니다.
+      } catch (error) {
+        console.error('Failed to fetch ask data:', error);
+      }
+    };
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch ask data: ${response.statusText}`);
-    }
+    const formatDate = (dateArray) => {
+      if (!dateArray || dateArray.length === 0) return '날짜 없음';
+      const [year, month, day, hour = 0, minute = 0, second = 0] = dateArray;
+      const date = new Date(year, month - 1, day, hour, minute, second);
+      return date.toLocaleDateString('ko-KR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+    };
 
-    const data = await response.json();
-    askData.value = data;
-    answer.value = data.askAnswer || ''; // 이미 작성된 답변을 불러옵니다.
-  } catch (error) {
-    console.error('Failed to fetch ask data:', error);
-  }
-};
+    const closeForm = () => {
+      window.close();
+    };
 
-const formatDate = (dateString) => {
-  if (!dateString) return '-';
-  const date = new Date(dateString);
-  if (isNaN(date)) return 'Invalid Date';
-  return date.toLocaleString('ko-KR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  });
-};
+    const submitAnswer = async () => {
+      console.log('Answer submitted:', answer.value);
+      const askCode = route.query.askCode || route.params.askCode;
+      if (!askCode) {
+        console.error('askCode is not defined');
+        return;
+      }
+      try {
+        await axios.post(`http://localhost:9000/admin/ask/answer/${askCode}`, {
+          answer: answer.value,
+        });
+        window.close();
+      } catch (error) {
+        console.error('Failed to submit answer:', error);
+      }
+    };
 
-const submitAnswer = async () => {
-  const askCode = props.askCode.askCode;
-  if (!askCode) {
-    console.error('askCode is not defined');
-    return;
-  }
-  try {
-    const response = await fetch(`http://localhost:5000/admin/ask/answer/${askCode}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        answer: answer.value,
-      }),
-    });
+    onMounted(fetchAskData);
 
-    if (!response.ok) {
-      throw new Error(`Failed to submit answer: ${response.statusText}`);
-    }
-
-    // Close the form after successful submission
-    emit('refreshData');
-    props.closeEdit();
-  } catch (error) {
-    console.error('Failed to submit answer:', error);
+    return {
+      askData,
+      answer,
+      formatDate,
+      closeForm,
+      submitAnswer
+    };
   }
 };
-
-onMounted(fetchAskData);
 </script>
 
 <style scoped>
@@ -134,16 +117,17 @@ onMounted(fetchAskData);
 }
 
 .form-wrapper {
-  width: 100%;
+  width: 860px;
   max-width: 1200px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  //padding: 20px;
   box-sizing: border-box;
 }
 
 .detail-table {
-  width: 100%x;
+  width: 860px;
   border-collapse: collapse;
   align-content: center;
   justify-content: center;
@@ -153,11 +137,10 @@ onMounted(fetchAskData);
 .detail-table td {
   border: 1px solid #ddd;
   padding: 15px;
-  font-size: 16px;
 }
 
 .detail-table .content-td {
-  height: 200px; /* 여기에서 원하는 높이를 설정합니다 */
+  height: 270px; /* 여기에서 원하는 높이를 설정합니다 */
   vertical-align: top;
 }
 
@@ -175,17 +158,17 @@ onMounted(fetchAskData);
 }
 
 textarea {
-  width: 98%;
+  width: 838px;
   height: 210px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
   resize: vertical;
-  font-size: medium;
+  font-size: large;
 }
 
 .action-buttons {
-  width: 100%;
+  width: 850px;
   display: flex;
   gap: 10px;
   justify-content: flex-end;
@@ -216,68 +199,10 @@ textarea {
 }
 
 .cancel-btn:hover {
-  background-color: red; /* hover 시 빨간색으로 변경 */
+  background-color: rgba(217, 217, 233, 0.56);
 }
 
 .submit-btn:hover {
-  background-color: limegreen; /* hover 시 녹색으로 변경 */
+  background-color: rgba(253, 111, 135, 0.63);
 }
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-
-.popup-content {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #f5f5f5;
-  padding: 40px;
-  border-radius: 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  width: 50%;
-  max-width: 2000px;
-  height: 65%;
-  overflow-y: auto;
-  max-height: 84vh;
-}
-
-.popup-content h2 {
-  margin-bottom: 20px;
-}
-
-.popup-content .form-group {
-  margin-bottom: 20px;
-}
-
-.popup-content label {
-  font-weight: bold;
-}
-
-.popup-content input[type="text"],
-.popup-content textarea {
-  width: 100%;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  resize: none;
-  height: auto;
-}
-
-.popup-content button {
-  padding: 10px 20px;
-  background-color: #9d9d9d;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 </style>

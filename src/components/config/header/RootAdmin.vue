@@ -4,7 +4,7 @@
     <img class="logo" src="@/assets/icon/PIOMS_로고.png" alt="Logo"/>
     <section class="header_info">
       <div class="crown">
-        <img class="crown_icon" src="@/assets/icon/Crown.png" alt="Crown"/>
+        <img class="crown_icon" src="@/assets/icon/root/Crown.png" alt="Crown"/>
         <h5><u>Akatsuki</u>님 정보</h5>
       </div>
       <div class="dictionary">
@@ -27,7 +27,7 @@
   <!-- 카테고리 -->
   <nav class="header_rootAdmin">
     <ul class="nav_header">
-      <li><a href="#" class="dashboard" style= "display: flex;"><img src="@/assets/icon/dashboard.png"/></a></li>
+      <li><a href="#" class="dashboard" style= "display: flex;"><img src="@/assets/icon/dashboard.png"></a></li>
 
       <li><a href="#" class="label">가맹점 및 직원 관리</a>
         <container class="submenu_box">
@@ -165,46 +165,59 @@
     </ul>
   </nav>
   <hr class="hr2"/>
+
 </template>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
+<script setup>
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+  // 모든 .label 요소를 선택합니다.
   var labels = document.querySelectorAll('.label');
+
+  // 타이머를 위한 변수
   var hideTimeout;
 
+  // 각 .label 요소에 이벤트 리스너를 추가합니다.
   labels.forEach(function(label) {
-    var submenu = label.nextElementSibling;
-
-    label.addEventListener('mouseenter', function() {
-      clearTimeout(hideTimeout);
-      if (submenu) {
-        submenu.style.display = 'block';
-      }
-    });
+  var submenu = label.nextElementSibling;
+  label.addEventListener('mouseenter', function() {
+  clearTimeout(hideTimeout);
+  // 하위 메뉴를 표시합니다.
+  if (submenu) {
+  submenu.style.display = 'block';
+  }
+  });
 
     label.addEventListener('mouseleave', function() {
-      hideTimeout = setTimeout(function() {
-        if (!submenu.matches(':hover')) {
-          submenu.style.display = 'none';
-        }
-      }, 300);
-    });
-
-    if (submenu) {
-      submenu.addEventListener('mouseenter', function() {
-        clearTimeout(hideTimeout);
-      });
-
-      submenu.addEventListener('mouseleave', function() {
-        hideTimeout = setTimeout(function() {
-          if (!submenu.matches(':hover') && !label.matches(':hover')) {
-            submenu.style.display = 'none';
-          }
-        }, 300);
-      });
-    }
+    // 마우스가 .submenu_box 안으로 이동할 때 타이머를 해제합니다.
+    submenu.addEventListener('mouseenter', function() {
+    clearTimeout(hideTimeout);
   });
-});
+
+    // 일정 시간이 지난 후 하위 메뉴를 숨깁니다.
+    hideTimeout = setTimeout(function() {
+    if (submenu) {
+    submenu.style.display = 'none';
+  }
+  }, 100);
+  });
+
+    submenu.addEventListener('mouseleave', function() {
+    // 마우스가 .label 안으로 이동할 때 타이머를 해제합니다.
+    label.addEventListener('mouseenter', function() {
+    clearTimeout(hideTimeout);
+  });
+
+    // 일정 시간이 지난 후 하위 메뉴를 숨깁니다.
+    hideTimeout = setTimeout(function() {
+    if (submenu) {
+    submenu.style.display = 'none';
+  }
+  }, 100);
+  });
+  });
+  });
 </script>
 
 
@@ -212,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
   header {
     display: flex;
     justify-content: space-between;
-    width: 2100px;
+    width: 100%;
     height: 35px;
   }
   .header_info {
@@ -314,21 +327,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
   hr.hr1 {
     padding: 0;
-    width: 2100px;
+    width: 99%;
     border: 0;
     height: 0;
     border-top: 0.5px solid #B9B9B9;
-    position: relative;
   }
 
   hr.hr2 {
     padding: 0;
-    width: 2100px;
+    width: 99%;
     height: 0;
-    border: 0;
     border-top: 0.5px solid #B9B9B9;
+    margin: 25px;
     position: relative;
-    top: 22px;
+    right: 15px;
   }
   hr.hr3 {
     padding: 0;
@@ -342,11 +354,10 @@ document.addEventListener('DOMContentLoaded', function() {
   .header_rootAdmin {
     display: flex;
     justify-content: center;
-    width: 2100px;
+    width: 100%;
     height: 20px;
     position: relative;
     top: 10px;
-    left: 55px;
   }
 
   .dashboard {
@@ -367,8 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
     line-height: 10px;
     display: inline; /* 리스트 아이템을 인라인으로 표시 */
     position: relative;
-    top: -4px;
-    cursor: pointer;
+    top: -1px;
   }
 
   .label_box.show {
@@ -389,9 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
     padding: 0;
     display: flex; /* 수평으로 맞추기 */
     justify-content: space-between;
-    width: 2000px;
   }
-
   .nav_header > il {
     position: relative;
   }
@@ -478,7 +486,6 @@ document.addEventListener('DOMContentLoaded', function() {
     width: 150px;
     height: 30px;
   }
-
   .submenu_box
   ,.submenu_box1
   ,.submenu_box2
@@ -493,7 +500,6 @@ document.addEventListener('DOMContentLoaded', function() {
     width: 220px;
     z-index: 10000;
   }
-
   .submenu_box{
     height: 320px;
   }
@@ -517,13 +523,6 @@ document.addEventListener('DOMContentLoaded', function() {
     background-color: #D9D9D9;
     border-radius: 12px;
     height: 12px;
-  }
-
-  /* :hover 상태를 이용해 서브메뉴 박스 표시 */
-  .label:hover + .submenu_box,
-  .submenu_box:hover,
-  .label:hover + .submenu .submenu_box:hover {
-    display: block;
   }
   /* .show 클래스가 추가되면 하위 메뉴 표시 */
   .show {
