@@ -1,8 +1,5 @@
 <template>
   <div class="dashboard-container">
-    <div class="sidebar">
-      <div class="sidebar-content">Dash board</div>
-    </div>
     <div class="main-content">
       <div class="top-row">
         <div class="section order-status">
@@ -162,12 +159,11 @@ const fetchProducts = async () => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     const data = await response.json();
-    lowStockItems.value = data.filter(item => item.franchiseWarehouseEnable < 10 && item.franchiseCode === 3);
+    lowStockItems.value = data.filter(item => item.franchiseWarehouseEnable <= 5);
   } catch (error) {
     console.error('Failed to fetch products:', error);
   }
 };
-
 
 const fetchFavorites = async () => {
   try {
@@ -288,24 +284,24 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.dashboard-container {
-  display: flex;
+body {
+  overflow-x: hidden;
 }
 
-.sidebar {
-  width: 200px;
-  background-color: #f4f4f4;
-  border-right: 1px solid #ddd;
+.dashboard-container {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  justify-content: center; /* 중앙 정렬 */
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
 .main-content {
+  width: 100%;
+  max-width: 1200px; /* 최대 너비 설정 */
+  margin: 0 auto; /* 중앙 정렬 */
   display: flex;
-  flex: 1;
   flex-direction: column;
-  padding: 20px;
 }
 
 .top-row {
