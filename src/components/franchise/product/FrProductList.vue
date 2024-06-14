@@ -424,6 +424,11 @@ fetchSecondCategories();
 fetchThirdCategories();
 </script>
 <style scoped>
+.Cloth {
+  margin-right: 5px;
+  position: relative;
+  top: 2px
+}
 
 .product-img {
   width: 30px;
@@ -449,7 +454,7 @@ fetchThirdCategories();
   border-radius: 5px;
   padding: 10px;
   width: 100%;
-  max-width: 1440px;
+  min-width: 1440px;
 }
 
 .filter-table td {
@@ -663,7 +668,6 @@ fetchThirdCategories();
   color: #555;
   font-weight: bold;
 }
-
 .filter-buttons {
   display: flex;
   justify-content: center;
