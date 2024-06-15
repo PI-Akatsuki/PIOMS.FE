@@ -3,6 +3,8 @@
    display: flex;">
   <div style=" display: flex;" >
    <div >
+
+<!--  누적된 배송현황  -->
     <div class = "delivery-list-box">
        <div class="delivery-count">
          <img class = "list" src="@/assets/icon/List.png"/>
