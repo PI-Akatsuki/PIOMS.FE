@@ -55,7 +55,7 @@ const deleteCategoryThird = async () => {
         'Content-Type': 'application/json',
       },
     });
-
+    // commit용 annotaion
     await Swal.fire({
       icon: 'success',
       title: '카테고리 삭제 성공!',
