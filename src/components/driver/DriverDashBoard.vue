@@ -29,6 +29,8 @@
           <div class="after-div">{{afterDiv}}</div>
         </div>
    </div>
+
+<!-- 공지사항 리스트 -->
     <div class = "notice-list">
       <div>
           <img class = "notice" src="@/assets/icon/speaker.png"/>
