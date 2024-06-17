@@ -130,6 +130,8 @@ import { computed, onMounted, ref } from "vue";
 import { useStore } from 'vuex';
 import Invoice from "@/components/driver/Invoice.vue";
 import DriverDashboardStatusPopup from "@/components/driver/DriverDashboardStatusPopup.vue";
+
+// alert관련 라이브러리
 import Swal from "sweetalert2";
 
 const store = useStore();
