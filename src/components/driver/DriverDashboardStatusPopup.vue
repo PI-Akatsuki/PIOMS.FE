@@ -1,4 +1,5 @@
 <template>
+<!-- 송장 번호 클릭 시 배송기사가 배송상태 변경 팝업창 -->
   <div>
     <div v-if="showPopup" class="popup-overlay">
       <div class="popup-content">
