@@ -57,7 +57,7 @@ const deleteCategoryThird = async () => {
     });
     // commit용 annotaion
     await Swal.fire({
-      icon: 'success',
+      icon: 'error',
       title: '카테고리 삭제 성공!',
       text: '소분류 카테고리를 삭제하였습니다.',
     });
